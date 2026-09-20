@@ -12,6 +12,8 @@ cd warehouse_optimizer_website
 Install dependencies:
 pip install -r requirements.txt
 python app.py
+The website url
+https://hack-a-matics-iuvv.onrender.com
 The application accepts:
 ### areas.csv
 Required columns:
