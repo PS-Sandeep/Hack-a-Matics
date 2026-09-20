@@ -7,7 +7,7 @@ Google OR-Tools, Haversine distance calculation, and Folium.
 - Python 3.x
 ## Installation
 Clone the repository:
-git clone YOUR_REPOSITORY_URL****************
+git clone https://github.com/PS-Sandeep/Hack-a-Matics
 cd warehouse_optimizer_website
 Install dependencies:
 pip install -r requirements.txt
