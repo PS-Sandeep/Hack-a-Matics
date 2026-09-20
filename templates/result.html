@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimization Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
+</head>
+<body>
+    <iframe class="map-frame" src="{{ url_for('map_page', job_id=job_id) }}" title="Warehouse optimization map"></iframe>
+
+    <header class="topbar">
+        <div>
+            <div class="eyebrow">OPTIMIZATION COMPLETE</div>
+            <h1>Warehouse Network</h1>
+        </div>
+        <a class="new-run" href="{{ url_for('index') }}">New Optimization</a>
+    </header>
+
+    <aside class="summary-card">
+        <div class="summary-item">
+            <span>Warehouses selected</span>
+            <strong>{{ result.selected|length }} / {{ result.number_requested }}</strong>
+        </div>
+        <div class="summary-item">
+            <span>Daily fuel cost</span>
+            <strong>₹{{ "{:,.2f}".format(result.total_daily_fuel_cost) }}</strong>
+        </div>
+        <div class="summary-item">
+            <span>Monthly fuel cost</span>
+            <strong>₹{{ "{:,.2f}".format(result.total_monthly_fuel_cost) }}</strong>
+        </div>
+    </aside>
+
+    <section class="comparison-panel">
+        <div class="panel-header">
+            <div>
+                <div class="eyebrow">ALL CANDIDATES</div>
+                <h2>Warehouse Comparison</h2>
+            </div>
+            <button id="close-panel" aria-label="Close comparison">×</button>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Warehouse</th>
+                        <th>Utilization</th>
+                        <th>Average Distance</th>
+                        <th>Delivery Radius</th>
+                        <th>Fuel Cost / Month</th>
+                        <th>Capacity</th>
+                        <th>Selected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for name in result.warehouse_order %}
+                    {% set w = result.warehouses[name] %}
+                    <tr class="{% if w.selected %}selected-row{% endif %}">
+                        <td><strong>{{ name }}</strong><small>{{ w.area_name }}</small></td>
+                        <td>{{ "%.2f"|format(w.utilization) }}%</td>
+                        <td>{{ "%.2f"|format(w.average_distance) }} km</td>
+                        <td>{{ "%.2f"|format(w.radius) }} km</td>
+                        <td>₹{{ "{:,.2f}".format(w.monthly_fuel_cost) }}</td>
+                        <td>{{ "{:,.0f}".format(w.capacity) }}</td>
+                        <td><span class="status {% if w.selected %}yes{% else %}no{% endif %}">{{ "YES" if w.selected else "NO" }}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <button class="comparison-toggle" id="open-panel">View comparison</button>
+    <script>
+        const panel = document.querySelector('.comparison-panel');
+        document.getElementById('close-panel').addEventListener('click', () => panel.classList.add('hidden'));
+        document.getElementById('open-panel').addEventListener('click', () => panel.classList.remove('hidden'));
+    </script>
+</body>
+</html>
