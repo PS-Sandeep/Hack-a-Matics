@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="input-page">
+    <div class="background-grid"></div>
+    <main class="app-shell">
+        <section class="input-panel">
+            <div class="brand">
+                <div class="brand-mark">W</div>
+                <div>
+                    <p class="eyebrow">LOGISTICS OPTIMIZATION</p>
+                    <h1>Warehouse Optimizer</h1>
+                    <p class="subtitle">Upload your demand and warehouse data, then generate an optimized delivery network.</p>
+                </div>
+            </div>
+
+            {% if error %}
+            <div class="error-box">{{ error }}</div>
+            {% endif %}
+
+            <form action="{{ url_for('run_optimize') }}" method="post" enctype="multipart/form-data" id="optimizer-form">
+                <div class="file-grid">
+                    <div class="file-card">
+                        <label>1. Areas CSV</label>
+                        <div class="drop-zone" data-input="areas_file">
+                            <input id="areas_file" name="areas_file" type="file" accept=".csv,text/csv">
+                            <div class="drop-icon">↑</div>
+                            <strong>Drag & drop areas.csv</strong>
+                            <span>or click to browse</span>
+                            <small class="file-name" id="areas-file-name">No file selected</small>
+                        </div>
+                        <div class="or-line"><span>OR</span></div>
+                        <input class="url-input" name="areas_url" type="url" placeholder="Paste direct CSV URL">
+                    </div>
+
+                    <div class="file-card">
+                        <label>2. Warehouses CSV</label>
+                        <div class="drop-zone" data-input="warehouses_file">
+                            <input id="warehouses_file" name="warehouses_file" type="file" accept=".csv,text/csv">
+                            <div class="drop-icon">↑</div>
+                            <strong>Drag & drop warehouses.csv</strong>
+                            <span>or click to browse</span>
+                            <small class="file-name" id="warehouses-file-name">No file selected</small>
+                        </div>
+                        <div class="or-line"><span>OR</span></div>
+                        <input class="url-input" name="warehouses_url" type="url" placeholder="Paste direct CSV URL">
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div>
+                        <label for="number_of_warehouses">Number of warehouses</label>
+                        <input id="number_of_warehouses" name="number_of_warehouses" type="number" min="1" step="1" inputmode="numeric" required placeholder="e.g. 3">
+                    </div>
+                    <div>
+                        <label for="fuel_price">Fuel price (₹/litre)</label>
+                        <input id="fuel_price" name="fuel_price" type="number" min="0.01" step="0.01" value="100" required>
+                    </div>
+                    <div>
+                        <label for="vehicle_mileage">Vehicle mileage (km/litre)</label>
+                        <input id="vehicle_mileage" name="vehicle_mileage" type="number" min="0.01" step="0.01" value="15" required>
+                    </div>
+                </div>
+
+                <button class="optimize-button" type="submit" id="submit-button">
+                    <span>Run Optimization</span><span>→</span>
+                </button>
+                <p class="hint">The optimization uses the exact Haversine + OR-Tools SCIP model supplied for this project.</p>
+            </form>
+        </section>
+
+        <section class="preview-panel">
+            <div class="preview-map">
+                <div class="map-lines"></div>
+                <div class="map-card-title">NETWORK PREVIEW</div>
+                <div class="preview-route route-a"></div>
+                <div class="preview-route route-b"></div>
+                <div class="preview-route route-c"></div>
+                <div class="preview-node node-a">W</div>
+                <div class="preview-node node-b">W</div>
+                <div class="preview-node node-c">W</div>
+                <div class="preview-area area-a"></div>
+                <div class="preview-area area-b"></div>
+                <div class="preview-area area-c"></div>
+                <div class="preview-area area-d"></div>
+                <div class="preview-legend">
+                    <span><i class="legend-red"></i> Candidate warehouse</span>
+                    <span><i class="legend-blue"></i> Demand area</span>
+                    <span><i class="legend-ring"></i> Delivery radius</span>
+                </div>
+                <div class="preview-overlay">
+                    <strong>Ready for your data</strong>
+                    <span>The final Folium map will display optimized assignments, warehouse markers, routes, demand heatmap and calculated delivery radii.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
