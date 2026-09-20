@@ -1,4 +1,5 @@
-Flask>=3.0,<4
-folium>=0.17
-ortools>=9.10
-requests>=2.31
+Flask
+folium
+ortools
+requests
+gunicorn
