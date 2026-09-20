@@ -12,8 +12,6 @@ cd warehouse_optimizer_website
 Install dependencies:
 pip install -r requirements.txt
 python app.py
-Open in your browser:
-http://127.0.0.1:5000
 The application accepts:
 ### areas.csv
 Required columns:
